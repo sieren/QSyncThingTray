@@ -261,7 +261,7 @@ void SyncConnector::folderListReceived(QNetworkReply *reply)
 
 void SyncConnector::spawnSyncthingProcess(std::string filePath)
 {
-  if (!systemUtil.isSyncthingRunning())
+  if (!systemUtil.isBinaryRunning(std::string("syncthing")))
   {
     mpSyncProcess = new QProcess(this);
     connect(mpSyncProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(syncThingProcessSpawned(QProcess::ProcessState)));

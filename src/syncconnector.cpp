@@ -173,6 +173,7 @@ void SyncConnector::syncThingProcessSpawned(QProcess::ProcessState newState)
     switch (newState)
     {
       case QProcess::Running:
+        spawnNotifierProcess();
         mProcessSpawnedCallback(kSyncthingProcessState::SPAWNED);
         break;
       case QProcess::NotRunning:
@@ -274,11 +275,25 @@ void SyncConnector::spawnSyncthingProcess(std::string filePath)
   {
     if (mProcessSpawnedCallback != nullptr)
     {
+      spawnNotifierProcess();
       mProcessSpawnedCallback(kSyncthingProcessState::ALREADY_RUNNING);
     }
   }
 }
 
+  
+//------------------------------------------------------------------------------------//
+
+void SyncConnector::spawnNotifierProcess()
+{
+  if (!systemUtil.isBinaryRunning(std::string("syncthing-inotify")))
+  {
+    mpSyncthingNotifierProcess = new QProcess(this);
+    QString processWithPath = tr(systemUtil.getSyncthingiNotifierPath().c_str());
+    mpSyncthingNotifierProcess->start(processWithPath);
+  }
+    
+}
 
 //------------------------------------------------------------------------------------//
 
@@ -315,6 +330,11 @@ SyncConnector::~SyncConnector()
   if (mpSyncProcess != nullptr)
   {
     mpSyncProcess->kill();
+  }
+
+  if (mpSyncthingNotifierProcess != nullptr)
+  {
+    mpSyncthingNotifierProcess->kill();
   }
 }
   

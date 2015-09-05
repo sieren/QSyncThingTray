@@ -29,6 +29,11 @@ namespace sysutils
     {
       return T::isBinaryRunningImpl(binary);
     }
+    
+    std::string getSyncthingiNotifierPath()
+    {
+      return T::getSyncthingiNotifierPathImpl();
+    }
   };
 } // sysutils
 } // mfk

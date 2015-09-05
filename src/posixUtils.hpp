@@ -21,6 +21,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <QCoreApplication>
 namespace mfk
 {
 namespace sysutils
@@ -29,7 +30,7 @@ namespace sysutils
   {
     static bool isBinaryRunningImpl(std::string binary)
     {
-      const char* someapp = "syncthing";
+      const char* someapp = binary.c_str();
       std::stringstream cmd;
       
       cmd << "ps -ef | grep " << someapp << " | grep -v grep -c";
@@ -45,7 +46,13 @@ namespace sysutils
       bool result = instances == '0' ? false : true;
       return result;
     }
-
+    
+    static std::string getSyncthingiNotifierPathImpl()
+    {
+      std::string dirPath = QCoreApplication::applicationDirPath().toStdString();
+      dirPath.append("/../Resources/syncthing-inotify");
+      return dirPath;
+    }
   };
   } // posixutils
 } // mfk

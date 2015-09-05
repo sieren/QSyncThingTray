@@ -94,6 +94,7 @@ namespace connector
     private:
       void ignoreSslErrors(QNetworkReply *reply);
       void checkFolderList();
+      void spawnNotifierProcess();
       ConnectionStateCallback mConnectionStateCallback = nullptr;
       ConnectionHealthCallback mConnectionHealthCallback = nullptr;
       ProcessSpawnedCallback mProcessSpawnedCallback = nullptr;
@@ -104,6 +105,7 @@ namespace connector
       QNetworkAccessManager mFolderUrl;
       std::unique_ptr<QWebView> mpWebView;
       QProcess *mpSyncProcess;
+      QProcess *mpSyncthingNotifierProcess;
       std::list<std::pair<std::string, std::string>> mFolders;
       std::shared_ptr<QTimer> connectionHealthTimer;
       std::pair<std::string, std::string> mAuthentication;

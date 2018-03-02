@@ -70,7 +70,10 @@ cmake ../ -G Xcode
 
 ### Linux
 + Get the most recent [Qt Version](http://www.qt.io/download/)
-+ For Ubuntu 18.04: sudo apt install qt5-default libqt5webenginewidgets5 qtwebengine5-dev qml-module-qtwebengine build-essential libfontconfig1 mesa-common-dev libglu1-mesa-dev
++ *For Ubuntu: *: 
+```
+sudo apt-get install qt5-default libqt5webenginewidgets5 qtwebengine5-dev build-essential libfontconfig1 mesa-common-dev libglu1-mesa-dev
+```
 + Using `cmake`: 
 ```
 mkdir build && cd build

@@ -22,6 +22,9 @@ if (NOT Qt5_FOUND)
   )
 endif ()
 
+find_package(PkgConfig)
+pkg_check_modules(JSONCPP jsoncpp)
+
 # Fill the template with information gathered from CMake.
 configure_file(includes/config.template.h config.h @ONLY)
 
@@ -29,6 +32,10 @@ add_definitions(-DGLEW_STATIC)
 # The Qt5Widgets_INCLUDES also includes the include directories for
 # dependencies QtCore and QtGui
 include_directories(${Qt5Widgets_INCLUDES})
+if (${JSONCPP_FOUND})
+    add_definitions(-DHAVE_JSONCPP)
+    include_directories(${JSONCPP_INCLUDE_DIRS})
+endif ()
 
 # We need add -DQT_WIDGETS_LIB when using QtWidgets in Qt 5.
 add_definitions(${Qt5Widgets_DEFINITIONS})
@@ -135,6 +142,10 @@ else()
   find_package(Qt5 REQUIRED COMPONENTS WebEngineWidgets)
   target_link_libraries(QSyncthingTray Qt5::Widgets Qt5::Network Qt5::WebEngineWidgets)
 endif()
+
+if (${JSONCPP_FOUND})
+    target_link_libraries(QSyncthingTray ${JSONCPP_LINK_LIBRARIES})
+endif ()
 
 
 # Temporary solution/hack to generate package.

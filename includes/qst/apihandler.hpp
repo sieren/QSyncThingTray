@@ -33,6 +33,11 @@
 #include <tuple>
 #include "utilities.hpp"
 
+#ifdef HAVE_JSONCPP
+#include <sstream>
+#include <json/reader.h>
+#endif
+
 #define kInternalChangedFilesCache 5
 
 namespace
@@ -99,12 +104,21 @@ namespace api
       }
       else
       {
+#ifdef HAVE_JSONCPP
+        std::stringstream downloadedDataStream(reply.toStdString());
+        Json::Value replyData;
+        Json::parseFromStream(Json::CharReaderBuilder(), downloadedDataStream, &replyData, nullptr);
+        Json::Value connectionArray = replyData["total"];
+        uint64_t inBytes = connectionArray["inBytesTotal"].asUInt64();
+        uint64_t outBytes = connectionArray["outBytesTotal"].asUInt64();
+#else
         QString m_DownloadedData = static_cast<QString>(reply);
         QJsonDocument replyDoc = QJsonDocument::fromJson(m_DownloadedData.toUtf8());
         QJsonObject replyData = replyDoc.object();
         QJsonObject connectionArray = replyData["total"].toObject();
         double inBytes = static_cast<double>(connectionArray.find("inBytesTotal").value().toDouble());
         double outBytes = static_cast<double>(connectionArray.find("outBytesTotal").value().toDouble());
+#endif
         curInBytes = (std::max)(0.0, ((inBytes - std::get<0>(oldTraffic)) / (timeDelta.count() * 1e-3)))
           + (std::numeric_limits<double>::min)();
         curOutBytes = (std::max)(0.0, ((outBytes - std::get<1>(oldTraffic)) / (timeDelta.count()* 1e-3)))
